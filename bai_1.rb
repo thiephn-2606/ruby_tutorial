@@ -6,12 +6,8 @@ class Bai1
 
     while i < num  do
       puts "Enter sô:"
-      a = gets.chomp
-
-      if a.empty?
-        a = 0
-      end
-      @arr.push a.to_i
+      a = gets.chomp.to_i
+      @arr.push a
 
       i +=1
     end
@@ -20,19 +16,13 @@ class Bai1
   end
   
   def sum_array
-    sum = @arr.inject{|sum,e| sum + e}
+    sum = @arr.sum
     puts "Tong phan tu array la: #{sum}"
   end
 
   def square_array
-    square = Proc.new do |n| 
-      if n == 6 || n == 7 
-        n
-      else
-        n*n
-      end
-    end
-
+    # square = Proc.new { |n| n == 6 || n == 7 ? n : n*n }
+    square = Proc.new { |n| [6, 7].include?(n) ? n : n*n }
     square_arr = @arr.map(&square)
     puts "luy thua cua array #{@arr} là: \n #{square_arr}"
   end
