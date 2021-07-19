@@ -3,32 +3,44 @@ require 'time'
 
 class CheckTimeOt
 	def input_time
-		puts "Please enter dob in hh:mm format;"
-		puts "Time check in"
-		time_in = gets.chomp
-		puts "Time check out"
-		time_out = gets.chomp
-		@time_in = DateTime.strptime(time_in, '%H:%M').to_time
-		@time_out = DateTime.strptime(time_out, '%H:%M').to_time
-
-
+		begin
+			puts "Please enter dob in hh:mm format;"
+			puts "Time check in "
+			time_checkin = gets.chomp
+			puts "Time check out"
+			time_checkout = gets.chomp
+			@time_checkin = DateTime.strptime(time_checkin, '%H:%M').to_time
+			@time_checkout = DateTime.strptime(time_checkout, '%H:%M').to_time
+		
+		rescue Exception => e
+			puts e.message
+		end
 	end
 
 	def time_OT
-		@tiem_ot = 	(@time_out - @time_in) /3600
+		(@time_checkout - @time_checkin) /3600
 	end
 
 	def check_time_OT
-		time_current = DateTime.now 
-		puts "tiem #{time_current}"
-		if @time_in <= DateTime.strptime('08:00', '%H:%M').to_time &&  @time_out <= DateTime.strptime('12:30', '%H:%M').to_time
-			puts "OT = #{time_OT}, Lunch: N, Dinner: N" 
-		elsif @time_in <= DateTime.strptime('12:00', '%H:%M').to_time &&  @time_out <= DateTime.strptime('16:30', '%H:%M').to_time
-			puts "OT = #{time_OT - 1}, Lunch: Y, Dinner: N" 
-		elsif @time_in <= DateTime.strptime('18:00', '%H:%M').to_time &&  @time_out > DateTime.strptime('21:00', '%H:%M').to_time
-			puts "OT = #{time_OT}, Lunch: N, Dinner: Y" 
+		ot_time = @time_checkin - @time_checkout
+		case time_OT
+
+		when 0..4
+			if @time_checkout > DateTime.strptime("21:00", '%H:%M').to_time
+				puts "OT: #{time_OT}, Lunch: N, Dinner: Y"
+			else 
+				puts "OT: #{time_OT}, Lunch: N, Dinner: N"
+			end
+		when 4..12
+			if(@time_checkin.hour..@time_checkout.hour).to_a.include?(12) && (@time_checkin.hour..@time_checkout.hour).to_a.include?(13) 
+				puts "OT: #{(time_OT) -1 }, Lunch: y, Dinner: N"  
+			else
+				puts "OT: #{(time_OT)}, Lunch: N, Dinner: N" 
+			end
+		else
+			puts "OT: #{time_OT}, Lunch: N, Dinner: N"
 		end
-	end
+  end
 end
 
 rs = CheckTimeOt.new
