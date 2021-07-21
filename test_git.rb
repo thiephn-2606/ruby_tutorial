@@ -1,6 +1,6 @@
 class TestGit
   def test
-   puts "hello word"
+    puts "hello word"
   end
   
 end
